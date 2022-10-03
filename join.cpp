@@ -16,8 +16,8 @@ int32_t main()
 {
     cout << "main start" << endl;
     std::thread t1(fun1);
-    std::thread t2(fun2);
     t1.join();
+    std::thread t2(fun2);
     cout << "After t1" << endl;
     t2.join();
     cout << "after lambda" << endl;
