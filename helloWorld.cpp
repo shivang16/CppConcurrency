@@ -6,7 +6,6 @@ using namespace std;
 void hello()
 {
     std::cout<<"Hello Concurrent World\n";
-    
 }
 int main()
 {
