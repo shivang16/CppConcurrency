@@ -23,6 +23,7 @@ using namespace std;
         // }
 
         void init(){
+            // cout << "inside init"<<endl;
             std::unique_lock<std::shared_mutex> ul(m1);
             cv.wait(ul,[]{return !isClientInitialised;});
             cout << "Connection initalized for client " << clientName << endl;
@@ -33,6 +34,7 @@ using namespace std;
         }
 
         void request(int val){
+            // cout << "inside request"<<endl;
             std::shared_lock <std::shared_mutex> sl(m1);
             cv.wait(sl,[]{return isClientInitialised && !isClosed;});
             cout << "Client " << clientName << " requested " << val << endl;
@@ -42,6 +44,7 @@ using namespace std;
 
 
         void close(){
+            // cout << "inside close"<<endl;
             std::unique_lock <std::shared_mutex> ul(m1);
             cv.wait(ul,[]{return isClientInitialised &&!isClosed;});
             cout << "Closing the connection for client " << clientName << endl;
@@ -58,16 +61,20 @@ int32_t main(){
     // Client c3("Ashutosh");
     clientName="Shivang";
     vector <std::thread> th;
-    for(int i=0;i<30;i++){
-        int operationSelector = rand()%4;
-        cout << operationSelector << endl;
-        if(operationSelector==2){
+    for(int i=0;i<50;i++){
+        int operationSelector;
+        if(i>40)
+            operationSelector = rand()%3;
+        else
+            operationSelector = rand()%2;
+        // cout << operationSelector << endl;
+        if(operationSelector==0){
             std::thread t(init);
              th.push_back(std::move(t));
-        }else if(operationSelector==3){
+        }else if(operationSelector==1){
             int val = rand()%100;
             std::thread t(request,val);
-             th.push_back(std::move(t));
+            th.push_back(std::move(t));
         }else{
             std::thread t(close);
              th.push_back(std::move(t));
